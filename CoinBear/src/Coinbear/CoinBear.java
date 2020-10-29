@@ -14,7 +14,7 @@ public class CoinBear {
 	public static ArrayList<Block> blockchain = new ArrayList<Block>();
 	public static HashMap<String, TransactionOutput> UTXOs = new HashMap<String, TransactionOutput>();
 
-	public static int difficulty = 5;
+	public static int difficulty = 1;
 	public static float minimumTransaction = 0.1f;
 	public static Wallet walletA;
 	public static Wallet walletB;
@@ -22,11 +22,8 @@ public class CoinBear {
 	public static long timeStamp;
 
 	public static void main(String[] args) throws IOException {
-		try {
-			new GUI();
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+		
+
 		try {
 			File myObj = new File("ledger.txt");
 			if (myObj.createNewFile()) {
@@ -48,7 +45,6 @@ public class CoinBear {
 		walletB = new Wallet();
 		Wallet coinbase = new Wallet();
 		timeStamp = new Date().getTime();
-
 		// add our blocks to the blockchain ArrayList:
 		genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 50f, null);
 		genesisTransaction.generateSignature(coinbase.privateKey); // manually sign the genesis transaction
@@ -77,7 +73,7 @@ public class CoinBear {
 			myWriter.close();
 			return;
 		}
-	
+
 
         Block block1 = new Block(genesis.hash);
 		block1.addTransaction(walletA.sendFunds(walletB.publicKey, 40f));
@@ -90,7 +86,7 @@ public class CoinBear {
             myWriter.write(" : " + timeStamp);
             myWriter.write("\n");
             System.out.println("Successfully wrote to the Ledger File.");
-            System.out.println("\n");
+			System.out.println("\n");
             }else{
 				myWriter.close();
                 return;
@@ -100,8 +96,10 @@ public class CoinBear {
 
 		   myWriter.close();
 		   
+			new GUI();
 
-		 
+			
+		
 
 	}
 
@@ -139,6 +137,7 @@ public class CoinBear {
 			for(int t=0; t <currentBlock.transactions.size(); t++) {
 				Transaction currentTransaction = currentBlock.transactions.get(t);
 				
+				 
 				if(!currentTransaction.verifySignature()) {
 					System.out.println("#Signature on Transaction(" + t + ") is Invalid");
 					return false; 

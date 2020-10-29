@@ -9,6 +9,13 @@
             "name": "CodeLens (Launch) - CoinBear",
             "request": "launch",
             "mainClass": "Coinbear.CoinBear",
+            "projectName": "CoinBear-Java_2e9e5c93"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - CoinBear",
+            "request": "launch",
+            "mainClass": "Coinbear.CoinBear",
             "projectName": "CBR(Java)_cb079ee4"
         },
         {
