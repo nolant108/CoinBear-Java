@@ -14,8 +14,8 @@ public class CoinBear {
 	public static ArrayList<Block> blockchain = new ArrayList<Block>();
 	public static HashMap<String, TransactionOutput> UTXOs = new HashMap<String, TransactionOutput>();
 
-	public static int difficulty = 1;
-	public static float minimumTransaction = 0.1f;
+	public static int difficulty = 5;
+	public static float minimumTransaction = 0.000001f;
 	public static Wallet walletA;
 	public static Wallet walletB;
 	public static Transaction genesisTransaction;
@@ -46,7 +46,7 @@ public class CoinBear {
 		Wallet coinbase = new Wallet();
 		timeStamp = new Date().getTime();
 		// add our blocks to the blockchain ArrayList:
-		genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 50f, null);
+		genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 100f, null);
 		genesisTransaction.generateSignature(coinbase.privateKey); // manually sign the genesis transaction
 		genesisTransaction.transactionId = "0"; // manually set the transaction id
 		genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.reciepient, genesisTransaction.value,
@@ -74,9 +74,11 @@ public class CoinBear {
 			return;
 		}
 
-
+		
         Block block1 = new Block(genesis.hash);
 		block1.addTransaction(walletA.sendFunds(walletB.publicKey, 40f));
+		block1.addTransaction(walletB.sendFunds(walletA.publicKey, 10f));
+		block1.addTransaction(walletA.sendFunds(walletB.publicKey, 5f));
 		addBlock(block1);
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
@@ -90,13 +92,71 @@ public class CoinBear {
             }else{
 				myWriter.close();
                 return;
-        }
+		}
+		
 
-     
+		Block block2 = new Block(block1.hash);
+		block2.addTransaction(walletB.sendFunds(walletA.publicKey, 5f));
+		block2.addTransaction(walletA.sendFunds(walletB.publicKey, 40f));
+		block2.addTransaction(walletB.sendFunds(walletA.publicKey, 10f));
+		block2.addTransaction(walletA.sendFunds(walletB.publicKey, 5f));
+		addBlock(block2);
+		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+		System.out.println("WalletB's balance is: " + walletB.getBalance());
+        if(isChainValid() == true){
+            myWriter.write(block1.hash);
+            myWriter.write(" : " + blockchain);
+            myWriter.write(" : " + timeStamp);
+            myWriter.write("\n");
+            System.out.println("Successfully wrote to the Ledger File.");
+			System.out.println("\n");
+            }else{
+				myWriter.close();
+                return;
+		}
+
+		Block block3 = new Block(block2.hash);
+		block3.addTransaction(walletB.sendFunds(walletA.publicKey, 5f));
+		block3.addTransaction(walletA.sendFunds(walletB.publicKey, 40f));
+		block3.addTransaction(walletB.sendFunds(walletA.publicKey, 10f));
+		block3.addTransaction(walletA.sendFunds(walletB.publicKey, 5f));
+		addBlock(block3);
+		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+		System.out.println("WalletB's balance is: " + walletB.getBalance());
+        if(isChainValid() == true){
+            myWriter.write(block2.hash);
+            myWriter.write(" : " + blockchain);
+            myWriter.write(" : " + timeStamp);
+            myWriter.write("\n");
+            System.out.println("Successfully wrote to the Ledger File.");
+			System.out.println("\n");
+            }else{
+				myWriter.close();
+                return;
+		}
+
+
+		Block block4 = new Block(block3.hash);
+		block4.addTransaction(walletB.sendFunds(walletA.publicKey, 5f));
+		block4.addTransaction(walletA.sendFunds(walletB.publicKey, 40f));
+		addBlock(block4);
+		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+		System.out.println("WalletB's balance is: " + walletB.getBalance());
+        if(isChainValid() == true){
+            myWriter.write(block2.hash);
+            myWriter.write(" : " + blockchain);
+            myWriter.write(" : " + timeStamp);
+            myWriter.write("\n");
+            System.out.println("Successfully wrote to the Ledger File.");
+			System.out.println("\n");
+            }else{
+				myWriter.close();
+                return;
+		}
 
 		   myWriter.close();
 		   
-			new GUI();
+		   new GUI();
 
 			
 		
